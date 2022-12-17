@@ -3,7 +3,12 @@ import { useState } from 'react';
 import { Avatar } from './Avatar';
 import styles from './Comment.module.css';
 
-export function Comment({content, onDeleteComment}){
+interface CommentProps {
+    content: string;
+    onDeleteComment: (comment: string) => void;
+}
+
+export function Comment({content, onDeleteComment}: CommentProps){
     const [likeCount, setLikeCount] = useState(0);
 
     function handleLikeComment(){
@@ -21,7 +26,6 @@ export function Comment({content, onDeleteComment}){
             <Avatar
                 hasBorder={false}
                 src="https://avatars.githubusercontent.com/u/38386523?s=400&u=cb1bdaf4d1261d0791810005695f00e1f1b435d8&v=4"
-                alt='Avatar do autor'
             />
 
             <div className={styles.commentBox}>

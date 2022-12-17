@@ -1,13 +1,29 @@
 import { format, formatDistanceToNow } from 'date-fns';
 import pt_BR from 'date-fns/locale/pt-BR';
 import { FolderPlus } from 'phosphor-react';
-import { useState } from 'react';
-import { Avatar } from './Avatar.jsx';
-import { Comment } from './Comment.jsx';
+import { ChangeEvent, FormEvent, InvalidEvent, useState } from 'react';
+import { Avatar } from './Avatar.js';
+import { Comment } from './Comment.js';
 import styles from './Post.module.css';
 
+interface Author {
+    name: string;
+    role: string;
+    avatarUrl: string;
+}
 
-export function Post({author, content, publishedAt}){
+interface Content {
+    type: string;
+    content: string;
+}
+
+interface PostProps {
+    author: Author;
+    content: Content[];
+    publishedAt: Date;
+}
+
+export function Post({author, content, publishedAt}: PostProps){
     const [comments, setComment] = useState([
         "Bora postar!"
     ]);
@@ -23,7 +39,7 @@ export function Post({author, content, publishedAt}){
         addSuffix: true
     });
 
-    function handleCreateNewComment(){
+    function handleCreateNewComment(event: FormEvent){
         event.preventDefault();
 
         setComment([...comments, newCommentText]);
@@ -31,17 +47,17 @@ export function Post({author, content, publishedAt}){
         setNewCommentText('');
     }
 
-    function handleNewCommentChange(){
+    function handleNewCommentChange(event: ChangeEvent<HTMLTextAreaElement>){
         event.target.setCustomValidity('');
         setNewCommentText(event.target.value);
     }
 
-    function handleNewCommentInvalid(){
+    function handleNewCommentInvalid(event: InvalidEvent<HTMLTextAreaElement>){
         console.log(event);
         event.target.setCustomValidity('Este campo é obrigatório.');
     }
 
-    function deleteComment(commentToDelete){
+    function deleteComment(commentToDelete: string){
         const commentsWithoutDeletedOne = comments.filter(comment => {
             return comment !== commentToDelete;
         });
@@ -58,7 +74,6 @@ export function Post({author, content, publishedAt}){
                     <Avatar
                         hasBorder
                         src={author.avatarUrl}
-                        alt='Avatar do autor'
                     />
                     <div className={styles.authorInfo}>
                         <strong>{author.name}</strong>
